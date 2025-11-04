@@ -1,0 +1,19 @@
+# Ignore data and model files
+data/
+models/
+
+# Python cache + bytecode
+__pycache__/
+*.pyc
+
+# Virtual environments and env files
+venv/
+.env/
+
+# Streamlit and system files
+.streamlit/
+.DS_Store
+
+# OS / IDE
+.vscode/
+Thumbs.db
