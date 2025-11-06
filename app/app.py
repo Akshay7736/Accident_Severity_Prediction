@@ -87,8 +87,7 @@ with col3:
     casualties = st.number_input("Number of Casualties", min_value=1, value=1)
 with col4:
     speed_limit = st.number_input("Speed Limit (mph)", min_value=10, max_value=80, step=10, value=30)
-
-vehicle_type = st.selectbox("Vehicle Type", get_dropdown_options(processed_df, "Vehicle_Type"))
+    vehicle_type = st.selectbox("Vehicle Type", get_dropdown_options(processed_df, "Vehicle_Type"))
 
 # --- Prepare input for model ---
 feature_order = [c for c in processed_df.columns if c != "Accident_Severity"]
@@ -132,7 +131,22 @@ if st.button("🔮 Predict Accident Severity"):
         pred = model.predict(enc_df)[0]
         predicted_label = severity_mapping.get(pred, pred)
 
-        st.success(f"### 🧾 Predicted Severity: **{predicted_label}**")
+        color_map = {
+            "Slight": "#2ecc71",   # Green
+            "Serious": "#e67e22",  # Orange
+            "Fatal": "#e74c3c"     # Red
+        }
+        box_color = color_map.get(predicted_label, "#3498db")
+        
+        st.markdown(
+            f"""
+            <div style='background-color:{box_color}; padding:20px; border-radius:10px; text-align:center;'>
+            <h3 style='color:white;'>🧾 Predicted Severity: <b>{predicted_label}</b></h3>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
 
         # --- Show probabilities (if supported) ---
         if hasattr(model, "predict_proba"):
@@ -153,4 +167,4 @@ if st.button("🔮 Predict Accident Severity"):
             st.table(input_df.T.astype(str).rename(columns={0: "Value"}))  # ✅ Fix for Arrow serialization
 
     except Exception as e:
-        st.error(f"Error during prediction: {e}")
+        st.error(f"Error during prediction: {e}" )
