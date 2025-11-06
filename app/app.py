@@ -3,6 +3,37 @@ import pandas as pd
 import joblib
 import os
 
+import base64
+
+def set_bg_gif(gif_path):
+    with open(gif_path, "rb") as f:
+        data = f.read()
+    encoded = base64.b64encode(data).decode()
+
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background: none;
+        }}
+        .stApp::before {{
+            content: "";
+            background: url(data:image/gif;base64,{encoded}) no-repeat center center fixed;
+            background-size: cover;
+            filter: blur(2px) brightness(0.9);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+
 # --- Paths ---
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 MODEL_PATH = os.path.join(ROOT, "models", "model.pkl")
@@ -21,6 +52,7 @@ model, mappings, processed_df = load_assets()
 
 # --- Streamlit Config ---
 st.set_page_config(page_title="Accident Severity Predictor", layout="centered")
+set_bg_gif("assets/traffic_bg.jpg")
 st.title("🚦 Accident Severity Prediction App")
 
 st.markdown("""
